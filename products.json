@@ -1,0 +1,18 @@
+{
+    "lesson0": {
+        "id": 1001,
+        "name": "Maths",
+        "location": "London",
+        "price": 50,
+        "image": "Images/math.png",
+        "spaces": 5
+    },
+    "lesson1": {
+        "id": 1002,
+        "name": "English",
+        "location": "Birmingham",
+        "price": 40,
+        "image": "Images/english.png",
+        "spaces": 5
+    }
+}

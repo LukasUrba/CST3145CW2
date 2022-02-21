@@ -22,7 +22,7 @@ var webstore = new Vue({
         },
         lessonButton: "<i class='fas fa-plus'></i> Add to cart",
         // Uses products from external file
-        products: products,
+        products: {},
         inCartButton: "Remove"
     },
     methods: {
@@ -132,5 +132,17 @@ var webstore = new Vue({
                         product.spaces.toString().includes(this.searchTerm.toLowerCase()))
             })
         }
+    },
+    created:
+    function() {
+        fetch('/../products.json').then(
+            function(response) {
+                response.json().then(
+                    function(json) {
+                        webstore.products = json;
+                    }
+                )
+            }
+        )
     }
 });
