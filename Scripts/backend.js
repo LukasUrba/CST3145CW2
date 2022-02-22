@@ -38,33 +38,32 @@ app.get('/collection/:collectionName', (req, response, next) => {
     })
 })
 
-app.post('/collection/:collectionName', (request, res, next) => {
-    request.collection.insert(req.body, (error, results) => {
+app.post('/collection/:collectionName', (req, response, next) => {
+    req.collection.insert(req.body, (error, results) => {
         if (error) return next(error);
-        res.send(results.ops);
+        response.send(results.ops);
     });
 });
 
-app.put('/collection/:collectionName/:id', (req, res, next) => {
+app.put('/collection/:collectionName/:id', (req, response, next) => {
     req.collection.update(
         { _id: new ObjectId(req.params.id) },
         { $set: req.body },
         { safe: true, multi: false },
-        (e, result) => {
-            if (e) return next(e);
-            res.send((result.result.n === 1) ? { msg: 'success' } : { msg: 'error' });
+        (error, result) => {
+            if (error) return next(error);
+            response.send((result.result.n === 1) ? { message: 'success' } : { message: 'error' });
         });
 });
 
-app.put('/collection/:collectionName', (request, res, next) => {
-    request.collection.insert(req.body, (error, results) => {
-        if (error) return next(error)
-        res.send(results.ops)
+app.delete('/collectione/:collectionName/:id', (req, response, next) => {
+        req.collection.deleteOne(
+            { _id: ObjectId(req.params.id) },
+            (error, result) => {
+                if (error) return next(error)
+                response.send((result.result.n === 1) ? { message: 'success' } : { message: 'error' })
+            })
     })
-})
-
-// var imagePath = path.resolve(__dirname,"../Images");
-// app.use(express.static(imagePath));
 
 app.use(function (req, response, next) {
     var filePath = path.join(__dirname, "/..", req.url);
