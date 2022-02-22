@@ -3,7 +3,7 @@
     "author": "Lukas",
     "private": true,
     "scripts": {
-        "start": "node Scripts/backend.js"
+        "start": "nodemon Scripts/backend.js"
     },
     "dependencies": {
         "cors": "^2.8.5",

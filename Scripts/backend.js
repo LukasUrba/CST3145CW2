@@ -6,14 +6,16 @@ const cors = require("cors");
 const mongoClient = require("mongodb").MongoClient;
 const app = express();
 
-app.use(cors());
 app.use(express.json())
+app.use(cors());
+
 
 // mongodb+srv://lukas-urba:123123456aA.@cst3145.grrhk.mongodb.net/
 // mongodb://localhost:3000/
 let db;
-mongoClient.connect('mongodb+srv://lukas-urba:123123456aA.@cst3145.grrhk.mongodb.net/', (error, client) => {
+mongoClient.connect('mongodb+srv://lukas-urba:123123456aA.@cst3145.grrhk.mongodb.net/webstore', (error, client) => {
     db = client.db('webstore');
+
 });
 
 app.param('collectionName', (req, response, next, collectionName) => {
