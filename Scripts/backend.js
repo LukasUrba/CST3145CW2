@@ -5,6 +5,7 @@ const req = require("express/lib/request");
 const cors = require("cors");
 const mongoClient = require("mongodb").MongoClient;
 const app = express();
+const ObjectId = require('mongodb').ObjectId;
 
 app.use(express.json())
 app.use(cors());
@@ -37,12 +38,31 @@ app.get('/collection/:collectionName', (req, response, next) => {
     })
 })
 
-app.post('/collection/:collectionName', (req, res, next) => {
-    req.collection.insert(req.body, (e, results) => {
-        if (e) return next(e)
+app.post('/collection/:collectionName', (request, res, next) => {
+    request.collection.insert(req.body, (error, results) => {
+        if (error) return next(error);
+        res.send(results.ops);
+    });
+});
+
+app.put('/collection/:collectionName/:id', (req, res, next) => {
+    req.collection.update(
+        { _id: new ObjectId(req.params.id) },
+        { $set: req.body },
+        { safe: true, multi: false },
+        (e, result) => {
+            if (e) return next(e);
+            res.send((result.result.n === 1) ? { msg: 'success' } : { msg: 'error' });
+        });
+});
+
+app.put('/collection/:collectionName', (request, res, next) => {
+    request.collection.insert(req.body, (error, results) => {
+        if (error) return next(error)
         res.send(results.ops)
     })
 })
+
 // var imagePath = path.resolve(__dirname,"../Images");
 // app.use(express.static(imagePath));
 
