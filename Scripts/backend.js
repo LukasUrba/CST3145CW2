@@ -9,9 +9,6 @@ const app = express();
 app.use(express.json())
 app.use(cors());
 
-
-// mongodb+srv://lukas-urba:123123456aA.@cst3145.grrhk.mongodb.net/
-// mongodb://localhost:3000/
 let db;
 mongoClient.connect('mongodb+srv://lukas-urba:123123456aA.@cst3145.grrhk.mongodb.net/webstore', (error, client) => {
     db = client.db('webstore');
@@ -21,6 +18,12 @@ mongoClient.connect('mongodb+srv://lukas-urba:123123456aA.@cst3145.grrhk.mongodb
 app.param('collectionName', (req, response, next, collectionName) => {
     req.collection = db.collection(collectionName);
     return next();
+});
+
+app.use(function (req, response, next) {
+    console.log("Request IP: " + req.url);
+    console.log("Request date: " + new Date());
+    next();
 });
 
 app.get("/", function (req, response) {
@@ -34,12 +37,12 @@ app.get('/collection/:collectionName', (req, response, next) => {
     })
 })
 
-app.use(function (req, response, next) {
-    console.log("Request IP: " + req.url);
-    console.log("Request date: " + new Date());
-    next();
-});
-
+app.post('/collection/:collectionName', (req, res, next) => {
+    req.collection.insert(req.body, (e, results) => {
+        if (e) return next(e)
+        res.send(results.ops)
+    })
+})
 // var imagePath = path.resolve(__dirname,"../Images");
 // app.use(express.static(imagePath));
 
@@ -56,8 +59,6 @@ app.use(function (req, response, next) {
         else next();
     });
 });
-
-
 
 app.use(function (req, response) {
     response.status(404).send("This page has not been made yet!");

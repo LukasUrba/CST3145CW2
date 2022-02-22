@@ -135,7 +135,7 @@ var webstore = new Vue({
     },
     created:
     function() {
-        fetch('/../products.json').then(
+        fetch('https://cst3145-lukas.herokuapp.com/collection/products').then(
             function(response) {
                 response.json().then(
                     function(json) {
