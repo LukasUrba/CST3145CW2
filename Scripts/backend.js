@@ -27,12 +27,6 @@ app.use(function (req, response, next) {
     next();
 });
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin","*");
-    res.header("Access-Control-Allow-Headers","*");
-    next();
-});
-
 app.get("/", function (req, response) {
     response.sendFile(path.join(__dirname, '/../index.html'));
 });

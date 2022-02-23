@@ -18,7 +18,8 @@ var webstore = new Vue({
         order: {
             firstName: '',
             lastName: '',
-            phoneNo: ''
+            phoneNo: '',
+            items: {}
         },
         lessonButton: "<i class='fas fa-plus'></i> Add to cart",
         // Uses products from external file
@@ -60,6 +61,9 @@ var webstore = new Vue({
         },
         // When the button is clicked sends out an alert and refreshes the page
         placeOrder() {
+            this.order.items = this.cart;
+            this.updateAmountsBackend();
+            this.addOrderToBackend();
             alert('Order Placed!');
             location.reload();
         },
@@ -71,16 +75,23 @@ var webstore = new Vue({
             }
             product.spaces++;
         },
+
         addOrderToBackend() {
             fetch('https://cst3145-lukas.herokuapp.com/collection/order%20info', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: webstore.order
-            }).then(
-                response => response.json()).then(
-                    responseJSON => {
-                    console.log('Success:', responseJSON);
-                });
+                body: JSON.stringify(webstore.order)
+            }).then(response => response.json())
+            .then(data => console.log("Success",data));
+        },
+
+        updateAmountsBackend() {
+            fetch('https://cst3145-lukas.herokuapp.com/collection/products', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(webstore.products)
+            }).then(response => response.json())
+            .then(data => console.log("Updated",data));
         }
     },
     computed: {
