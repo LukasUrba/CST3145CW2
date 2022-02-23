@@ -56,7 +56,7 @@ app.put('/collection/:collectionName/:id', (req, response, next) => {
         });
 });
 
-app.delete('/collectione/:collectionName/:id', (req, response, next) => {
+app.delete('/collection/:collectionName/:id', (req, response, next) => {
         req.collection.deleteOne(
             { _id: ObjectId(req.params.id) },
             (error, result) => {
