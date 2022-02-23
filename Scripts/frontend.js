@@ -62,6 +62,7 @@ var webstore = new Vue({
         // When the button is clicked sends out an alert and refreshes the page
         placeOrder() {
             this.order.items = this.cart;
+            console.log(webstore.products);
             this.updateAmountsBackend();
             this.addOrderToBackend();
             alert('Order Placed!');
@@ -89,7 +90,7 @@ var webstore = new Vue({
             fetch('https://cst3145-lukas.herokuapp.com/collection/products', {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(webstore.products)
+                body: JSON.stringify(products)
             }).then(response => response.json())
             .then(data => console.log("Updated",data));
         }
