@@ -28,7 +28,7 @@ var webstore = new Vue({
     methods: {
         // Adds the product id to cart and decreases a space by 1
         addToCart: function (product) {
-            this.cart.push(product.id);
+            this.cart.push(product._id);
             product.spaces--;
         },
         // Checks if there is still available product left
@@ -40,10 +40,10 @@ var webstore = new Vue({
             this.showProduct = this.showProduct ? false : true;
         },
         // Counts how many times an item is in the cart
-        counter(id) {
+        counter(_id) {
             let counter = 0;
             for (let i = 0; i < this.cart.length; i++) {
-                if (this.cart[i] === id) {
+                if (this.cart[i] === _id) {
                     counter++;
                 }
             }
@@ -52,10 +52,10 @@ var webstore = new Vue({
             }
         },
         // If the product is in the cart at least once it will display it on the checkout page
-        showInCart(product, id) {
-            let counter = this.counter(id);
+        showInCart(product, _id) {
+            let counter = this.counter(_id);
             if (counter > 0) {
-                return product.name;
+                return product.topic;
             }
         },
         // When the button is clicked sends out an alert and refreshes the page
@@ -65,11 +65,22 @@ var webstore = new Vue({
         },
         // Removes the product id from the array and increases the space of the product if it exists in the array in the first place
         removeFromCart(product) {
-            const index = this.cart.indexOf(product.id);
+            const index = this.cart.indexOf(product._id);
             if (index > -1) {
                 this.cart.splice(index, 1);
             }
             product.spaces++;
+        },
+        addOrderToBackend() {
+            fetch('https://cst3145-lukas.herokuapp.com/collection/order%20info', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: webstore.order
+            }).then(
+                response => response.json()).then(
+                    responseJSON => {
+                    console.log('Success:', responseJSON);
+                });
         }
     },
     computed: {
@@ -86,7 +97,7 @@ var webstore = new Vue({
         },
         // Sorts products by price low to high
         sortedProducts() {
-            function compare(a,b) {
+            function compare(a, b) {
                 if (a.price > b.price) return 1;
                 if (a.price < b.price) return -1;
                 return 0;
@@ -95,7 +106,7 @@ var webstore = new Vue({
         },
         // Sorts products by price high to low
         sortedProductsHigh() {
-            function compare(a,b) {
+            function compare(a, b) {
                 if (a.price < b.price) return 1;
                 if (a.price > b.price) return -1;
                 return 0;
@@ -104,18 +115,18 @@ var webstore = new Vue({
         },
         // Sorts products alphabetically from A to Z
         alphabetProducts() {
-            function compare(a,b) {
-                if (a.name > b.name) return 1;
-                if (a.name < b.name) return -1;
+            function compare(a, b) {
+                if (a.topic > b.topic) return 1;
+                if (a.topic < b.topic) return -1;
                 return 0;
             }
             return this.products.sort(compare);
         },
         // Sorts products from Z to A
         alphabetProductsZ() {
-            function compare(a,b) {
-                if (a.name < b.name) return 1;
-                if (a.name > b.name) return -1;
+            function compare(a, b) {
+                if (a.topic < b.topic) return 1;
+                if (a.topic > b.topic) return -1;
                 return 0;
             }
             return this.products.sort(compare);
@@ -123,26 +134,24 @@ var webstore = new Vue({
         // Uses a lambda function to check whether the search term inputted is included in
         // The product name, location, price or spaces.  It is not case sensitive
         searchField() {
-        
+
             return this.products.filter(product => {
-                return (product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                        product.location.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-                        // For the data saved as integers, they get cast to String which lets it match any typed numbers 
-                        product.price.toString().includes(this.searchTerm.toLowerCase()) ||
-                        product.spaces.toString().includes(this.searchTerm.toLowerCase()))
+                return (product.topic.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                    product.location.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                    // For the data saved as integers, they get cast to String which lets it match any typed numbers 
+                    product.price.toString().includes(this.searchTerm.toLowerCase()) ||
+                    product.spaces.toString().includes(this.searchTerm.toLowerCase()))
             })
         }
     },
     created:
-    function() {
-        fetch('https://cst3145-lukas.herokuapp.com/collection/products').then(
-            function(response) {
-                response.json().then(
-                    function(json) {
-                        webstore.products = json;
-                    }
-                )
-            }
-        )
-    }
+        function () {
+            fetch('https://cst3145-lukas.herokuapp.com/collection/products').then(
+                function (response) {
+                    response.json().then(
+                        function (json) {
+                            webstore.products = json;
+                        })
+                })
+        }
 });

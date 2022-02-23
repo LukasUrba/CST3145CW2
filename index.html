@@ -59,7 +59,7 @@
             <div v-if="searchTerm !== ''">
                 <div v-for="product in searchField" class="lesson">
                     <img class="lessonImage" v-bind:src="product.image">
-                    <h2>Subject: {{product.name}}</h2>
+                    <h2>Subject: {{product.topic}}</h2>
                     <p>Location: {{product.location}}</p>
                     <p>Price: £{{product.price}}</p>
                     <p>Spaces available: {{product.spaces}}</p>
@@ -71,7 +71,7 @@
             <div v-else-if="sortStyle === '' ">
                 <div v-for="product in products" class="lesson">
                     <img class="lessonImage" v-bind:src="product.image">
-                    <h2>Subject: {{product.name}}</h2>
+                    <h2>Subject: {{product.topic}}</h2>
                     <p>Location: {{product.location}}</p>
                     <p>Price: £{{product.price}}</p>
                     <p>Spaces available: {{product.spaces}}</p>
@@ -83,7 +83,7 @@
             <div v-else-if="sortStyle === 'priceLowHigh'">
                 <div v-for="product in sortedProducts" class="lesson">
                     <img class="lessonImage" v-bind:src="product.image">
-                    <h2>Subject: {{product.name}}</h2>
+                    <h2>Subject: {{product.topic}}</h2>
                     <p>Location: {{product.location}}</p>
                     <p>Price: £{{product.price}}</p>
                     <p>Spaces available: {{product.spaces}}</p>
@@ -95,7 +95,7 @@
             <div v-else-if="sortStyle === 'priceHighLow'">
                 <div v-for="product in sortedProductsHigh" class="lesson">
                     <img class="lessonImage" v-bind:src="product.image">
-                    <h2>Subject: {{product.name}}</h2>
+                    <h2>Subject: {{product.topic}}</h2>
                     <p>Location: {{product.location}}</p>
                     <p>Price: £{{product.price}}</p>
                     <p>Spaces available: {{product.spaces}}</p>
@@ -107,7 +107,7 @@
             <div v-else-if="sortStyle === 'aToZ'">
                 <div v-for="product in alphabetProducts" class="lesson">
                     <img class="lessonImage" v-bind:src="product.image">
-                    <h2>Subject: {{product.name}}</h2>
+                    <h2>Subject: {{product.topic}}</h2>
                     <p>Location: {{product.location}}</p>
                     <p>Price: £{{product.price}}</p>
                     <p>Spaces available: {{product.spaces}}</p>
@@ -119,7 +119,7 @@
             <div v-else-if="sortStyle === 'zToA'">
                 <div v-for="product in alphabetProductsZ" class="lesson">
                     <img class="lessonImage" v-bind:src="product.image">
-                    <h2>Subject: {{product.name}}</h2>
+                    <h2>Subject: {{product.topic}}</h2>
                     <p>Location: {{product.location}}</p>
                     <p>Price: £{{product.price}}</p>
                     <p>Spaces available: {{product.spaces}}</p>
@@ -133,10 +133,10 @@
             <h2 class="pageHeader">Shopping Cart</h2>
             <!-- Loops through the products and if they match the ID in the cart it shows it on this page as well as their frequency -->
             <div v-for="product in products" class="cartProducts">
-                <span v-text="showInCart(product,product.id)"></span>
-                <span v-if="counter(product.id) > 0">x</span>
-                <span v-text="counter(product.id)"></span>
-                <button v-text="inCartButton" v-if="counter(product.id) > 0" @click="removeFromCart(product)"></button>
+                <span v-text="showInCart(product,product._id)"></span>
+                <span v-if="counter(product._id) > 0">x</span>
+                <span v-text="counter(product._id)"></span>
+                <button v-text="inCartButton" v-if="counter(product._id) > 0" @click="removeFromCart(product)"></button>
 
             </div>
             <!-- Creates fields for the user to type their details -->
@@ -155,7 +155,7 @@
                 </p>
                 <!-- Button is disabled if any fields are empty or don't match the RegEx -->
                 <button disabled v-if="emptyFields">Place Order</button>
-                <button @click="placeOrder" v-else>Place Order</button>
+                <button @click="addOrderToBackend" @click="placeOrder" v-else>Place Order</button>
             </div>
 
         </div>
